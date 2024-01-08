@@ -9,17 +9,11 @@ const Splashscreen = ({navigation}) => {
   }, [])
   return (
     <View>
-      <Text style={styles.Splashscreen}>Splashscreen</Text>
+      <Text>Splashscreen</Text>
     </View>
   )
 }
 
 export default Splashscreen
 
-const styles = StyleSheet.create({
-  Splashscreen: {
-    color: '#0000',
-    alignItems: 'center',
-  }
-
-})
+const styles = StyleSheet.create({})

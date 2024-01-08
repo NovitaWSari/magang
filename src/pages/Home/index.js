@@ -14,7 +14,7 @@ const Home = () => {
     <View style={styles.container}>
       <StatusBar style='light' />
       <View style={styles.header}>
-        <Text style={styles.title}>MAGANG YUK</Text>
+        <Text style={styles.title}>HOME | MAGANG YUK</Text>
         <Text style={styles.subtitle}>MANDIRI atau MBKM Gass semua</Text>
       </View>
       <View style={styles.content}>
@@ -31,10 +31,10 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#83A2FF',
+    backgroundColor: '#ffff',
   },
   header: {
-    backgroundColor: '#B4BDFF',
+    backgroundColor: '#CDEDEE',
     paddingTop: 20,
     paddingBottom: 20,
     justifyContent: 'center',
@@ -56,15 +56,14 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#CDEDEE',
     marginTop: 20,
-    borderRadius: 10,
+    borderRadius: 35,
     paddingVertical: 20,
     width: '60%',
   },
   buttonText: {
     color: '#000000',
-    fontSize: 20,
-    fontFamily: 'poppins',
+    fontSize: 20
   },
 });
