@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Image } from 'react-native'
 import React, { useEffect } from 'react'
 
 const Splashscreen = ({navigation}) => {
@@ -9,7 +9,7 @@ const Splashscreen = ({navigation}) => {
   }, [])
   return (
     <View>
-      <Text>Splashscreen</Text>
+      <text> Splashscreen </text> 
     </View>
   )
 }

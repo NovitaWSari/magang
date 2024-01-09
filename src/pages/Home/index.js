@@ -12,12 +12,15 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style='light' />
+      <StatusBar style='dark' />
       <View style={styles.header}>
         <Text style={styles.title}>HOME | MAGANG YUK</Text>
         <Text style={styles.subtitle}>MANDIRI atau MBKM Gass semua</Text>
       </View>
       <View style={styles.content}>
+        <Text style={styles.appDescription}>
+           Aplikasi untuk mencatat informasi magang. Yuk daftar magang sekarang!
+        </Text>
         <TouchableOpacity style={styles.button} onPress={navigateToFormMagang}>
           <Text style={styles.buttonText}>DAFTAR MAGANG</Text>
         </TouchableOpacity>
@@ -35,19 +38,19 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#CDEDEE',
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 5,  // Mengurangi paddingTop agar lebih kecil
+    paddingBottom: 10,  // Mengurangi paddingBottom agar lebih kecil
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 2,
   },
   title: {
-    color: '#FFFFFF',
+    color: '#00000',
     fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 15,
   },
   subtitle: {
-    color: '#FFFFFF',
+    color: '#00000',
   },
   content: {
     flex: 1,
@@ -58,12 +61,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#CDEDEE',
     marginTop: 20,
-    borderRadius: 35,
-    paddingVertical: 20,
-    width: '60%',
+    borderRadius: 15, // Mengubah radius untuk membuat tombol lebih kecil
+    paddingVertical: 10, // Mengurangi padding untuk membuat tombol lebih kecil
+    width: '10%', // Mengurangi lebar tombol
   },
   buttonText: {
     color: '#000000',
-    fontSize: 20
+    fontSize: 12, // Mengubah ukuran teks
+    fontWeight: 'bold', // Menambah ketebalan teks
+    marginTop: 5, // Menambah jarak antara teks dan tombol
   },
 });

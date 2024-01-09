@@ -3,7 +3,7 @@ import { Text, StyleSheet, View, TextInput, Button } from 'react-native';
 import { db } from '../../../firebaseConfig';
 import { set, ref, push } from 'firebase/database';
 
-const AddData = () => {
+const AddData = ({ navigation }) => {
   const [programMagang, setProgramMagang] = useState('');
   const [namaPerusahaan, setNamaPerusahaan] = useState('');
   const [alamat, setAlamat] = useState('');
@@ -12,8 +12,9 @@ const AddData = () => {
   const [tanggalBerakhir, setTanggalBerakhir] = useState('');
   const [suratMagang, setSuratMagang] = useState('');
   const [buktiDaftarMagang, setBuktiDaftarMagang] = useState('');
+  const [status, setStatus] = useState('Menunggu Persetujuan'); // Menambahkan status default 'Menunggu Persetujuan'
 
-  const dataAddOn = () => {
+  const dataAddOn = async () => {
     const formData = {
       programMagang,
       namaPerusahaan,
@@ -23,6 +24,7 @@ const AddData = () => {
       tanggalBerakhir,
       suratMagang,
       buktiDaftarMagang,
+      status, // Menambahkan status ke formData
     };
 
     // Kirim data ke Firebase Realtime Database
@@ -44,64 +46,76 @@ const AddData = () => {
     setTanggalBerakhir('');
     setSuratMagang('');
     setBuktiDaftarMagang('');
+    setStatus('Pending'); // Mengganti status kembali ke 'Pending'
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Formulir Magang</Text>
-      <TextInput
-        placeholder='Program Magang'
-        value={programMagang}
-        onChangeText={(text) => setProgramMagang(text)}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder='Nama Perusahaan'
-        value={namaPerusahaan}
-        onChangeText={(text) => setNamaPerusahaan(text)}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder='Alamat'
-        value={alamat}
-        onChangeText={(text) => setAlamat(text)}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder='Nomor Telepon'
-        value={nomorTelepon}
-        onChangeText={(text) => setNomorTelepon(text)}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder='Tanggal Mulai (YYYY-MM-DD)'
-        value={tanggalMulai}
-        onChangeText={(text) => setTanggalMulai(text)}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder='Tanggal Berakhir (YYYY-MM-DD)'
-        value={tanggalBerakhir}
-        onChangeText={(text) => setTanggalBerakhir(text)}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder='Surat Magang'
-        value={suratMagang}
-        onChangeText={(text) => setSuratMagang(text)}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder='Bukti Daftar Magang'
-        value={buktiDaftarMagang}
-        onChangeText={(text) => setBuktiDaftarMagang(text)}
-        style={styles.input}
-      />
+      <View style={styles.formContainer}>
+        <TextInput
+          placeholder='Program Magang'
+          value={programMagang}
+          onChangeText={(text) => setProgramMagang(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder='Nama Perusahaan'
+          value={namaPerusahaan}
+          onChangeText={(text) => setNamaPerusahaan(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder='Alamat'
+          value={alamat}
+          onChangeText={(text) => setAlamat(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder='Nomor Telepon'
+          value={nomorTelepon}
+          onChangeText={(text) => setNomorTelepon(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder='Tanggal Mulai (YYYY-MM-DD)'
+          value={tanggalMulai}
+          onChangeText={(text) => setTanggalMulai(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder='Tanggal Berakhir (YYYY-MM-DD)'
+          value={tanggalBerakhir}
+          onChangeText={(text) => setTanggalBerakhir(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder='Surat Magang'
+          value={suratMagang}
+          onChangeText={(text) => setSuratMagang(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder='Bukti Daftar Magang'
+          value={buktiDaftarMagang}
+          onChangeText={(text) => setBuktiDaftarMagang(text)}
+          style={styles.input}
+        />
+        
+      </View>
 
-      <Button
-        title='Tambahkan Data'
-        onPress={dataAddOn}
-      />
+      <View style={styles.buttonContainer}>
+        <Button
+          title='Tambahkan Data'
+          onPress={dataAddOn}
+          color='#5cb85c' // Warna hijau
+        />
+        <Button
+          title='Lihat Status'
+          onPress={() => navigation.navigate('CrudTable')}
+          color='#337ab7' // Warna biru
+        />
+      </View>
     </View>
   );
 };
@@ -111,21 +125,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 16,
+    justifyContent: 'center',
   },
   header: {
     fontSize: 30,
     textAlign: 'center',
-    marginTop: 20,
     marginBottom: 20,
     fontWeight: 'bold',
+  },
+  formContainer: {
+    width: '100%',
+    alignItems: 'center',
   },
   input: {
     borderWidth: 1,
     borderColor: 'black',
-    margin: 10,
-    padding: 10,
-    fontSize: 18, 
+    marginVertical: 5,
+    padding: 8,
+    fontSize: 12,
     borderRadius: 5,
+    width: '80%', // Lebar input 80% dari parent
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end', // Mengubah dari 'space-between' ke 'flex-end'
+    marginTop: 20,
   },
 });
 
