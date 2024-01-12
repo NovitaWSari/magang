@@ -8,22 +8,21 @@ const CrudTable = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-        const databaseRef = ref(db, 'magang');
-        
-        try {
-          onValue(databaseRef, (snapshot) => {
-            const items = [];
-            snapshot.forEach((childSnapshot) => {
-              const item = childSnapshot.val();
-              items.push({ id: childSnapshot.key, ...item });
-            });
-            setData(items);
+      const databaseRef = ref(db, 'magang');
+
+      try {
+        onValue(databaseRef, (snapshot) => {
+          const items = [];
+          snapshot.forEach((childSnapshot) => {
+            const item = childSnapshot.val();
+            items.push({ id: childSnapshot.key, ...item });
           });
-        } catch (error) {
-          console.error('Error fetching data:', error.message);
-        }
-      };
-      
+          setData(items);
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error.message);
+      }
+    };
 
     fetchData();
   }, []);
@@ -39,32 +38,118 @@ const CrudTable = () => {
     }
   };
 
+  const handleAction = (id) => {
+    Alert.alert(
+      'Pilih Aksi',
+      '',
+      [
+        {
+          text: 'Log Book',
+          onPress: () => handleAddLogBook(id),
+        },
+        {
+          text: 'Laporan',
+          onPress: () => handleAddLaporan(id),
+        },
+        {
+          text: 'Batal',
+          style: 'cancel',
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Tabel Magang</Text>
-      
-<FlatList
-  data={data}
-  keyExtractor={(item) => item.id}
-  renderItem={({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text>Program Magang: {item.programMagang}</Text>
-      <Text>Nama Perusahaan: {item.namaPerusahaan}</Text>
-      <Text>Alamat: {item.alamat}</Text>
-      <Text>Nomor Telepon: {item.nomorTelepon}</Text>
-      <Text>Tanggal Mulai: {item.tanggalMulai}</Text>
-      <Text>Tanggal Berakhir: {item.tanggalBerakhir}</Text>
-      <Text>Surat Magang: {item.suratMagang}</Text>
-      <Text>Bukti Daftar Magang: {item.buktiDaftarMagang}</Text>
-      <Text>Status: {item.status}</Text> {/* Menambahkan status ke dalam tampilan */}
-      <Button
-        title="Hapus"
-        onPress={() => handleDelete(item.id)}
+      <View style={styles.header}>
+        <Text style={styles.title}>STATUS MAGANG | MAGANG YUK</Text>
+        <Text style={styles.subtitle}>Perkembangan Pengajuan Magang</Text>
+      </View>
+    <View style={styles.tableContainer}>
+      <Text style={[styles.judul]}>DAFTAR PENGAJUAN MAGANG</Text>
+      <View style={[styles.tableRow, styles.titleRow]}>
+        <View style={styles.tableCellTitle}>
+          <Text style={styles.titleText}>Program Magang</Text>
+        </View>
+        <View style={styles.tableCellTitle}>
+          <Text style={styles.titleText}>Nama Perusahaan</Text>
+        </View>
+        <View style={styles.tableCellTitle}>
+          <Text style={styles.titleText}>Alamat</Text>
+        </View>
+        <View style={styles.tableCellTitle}>
+          <Text style={styles.titleText}>Nomor Telepon</Text>
+        </View>
+        <View style={styles.tableCellTitle}>
+          <Text style={styles.titleText}>Tanggal Mulai</Text>
+        </View>
+        <View style={styles.tableCellTitle}>
+          <Text style={styles.titleText}>Tanggal Berakhir</Text>
+        </View>
+        <View style={styles.tableCellTitle}>
+          <Text style={styles.titleText}>Surat Magang</Text>
+        </View>
+        <View style={styles.tableCellTitle}>
+          <Text style={styles.titleText}>Bukti Daftar Magang</Text>
+        </View>
+        <View style={styles.tableCellTitle}>
+          <Text style={styles.titleText}>Status</Text>
+        </View>
+        <View style={styles.tableCellTitle}>
+          <Text style={styles.titleText}>Hapus</Text>
+        </View>
+      </View>
+
+      {/* Data Rows */}
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={styles.tableRow}>
+            <View style={styles.tableCell}>
+              <Text>{item.programMagang}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Text>{item.namaPerusahaan}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Text>{item.alamat}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Text>{item.nomorTelepon}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Text>{item.tanggalMulai}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Text>{item.tanggalBerakhir}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Text>{item.suratMagang}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Text>{item.buktiDaftarMagang}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Text>{item.status}</Text>
+            </View>
+            <View style={styles.tableCell}>
+              <Button
+                title="Hapus"
+                onPress={() => handleDelete(item.id)}
+              />
+              <Button
+                title="Aksi"
+                onPress={() => handleAction(item.id, 'aksi')}
+                    />
+            </View>
+          </View>
+        )}
       />
     </View>
-  )}
-/>
     </View>
+      
   );
 };
 
@@ -72,22 +157,55 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
   },
   header: {
-    fontSize: 30,
-    textAlign: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-    fontWeight: 'bold',
+    backgroundColor: '#CDEDEE',
+    paddingTop: 5,  // Mengurangi paddingTop agar lebih kecil
+    paddingBottom: 10,  // Mengurangi paddingBottom agar lebih kecil
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
   },
-  itemContainer: {
-    flexDirection: 'column',
+  title: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  subtitle: {
+    color: '#000',
+  },
+  judul: {
+    color: '#000',
+    fontSize: 12,
+    alignContent: 'flex-end',
+    paddingBottom: 10
+  },
+  tableContainer: {
+    padding: 10, // Sesuaikan jumlah padding sesuai kebutuhan
+  },
+  tableRow: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     borderBottomWidth: 1,
     borderColor: '#ccc',
-    padding: 10,
+    paddingVertical: 10,
+  },
+  tableCell: {
+    flex: 1,
+    alignItems: 'flex-start',
+    paddingHorizontal: 10,
+  },
+  titleRow: {
+    backgroundColor: '#ddd',
+  },
+  titleText: {
+    fontWeight: 'bold',
+  },
+  tableCellTitle: {
+    flex: 1,
+    alignItems: 'flex-start',
+    paddingHorizontal: 10,
   },
 });
 

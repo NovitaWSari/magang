@@ -19,7 +19,7 @@ const Home = () => {
       </View>
       <View style={styles.content}>
         <Text style={styles.appDescription}>
-           Aplikasi untuk mencatat informasi magang. Yuk daftar magang sekarang!
+          Aplikasi untuk mencatat informasi magang. Yuk daftar magang sekarang!
         </Text>
         <TouchableOpacity style={styles.button} onPress={navigateToFormMagang}>
           <Text style={styles.buttonText}>DAFTAR MAGANG</Text>
@@ -34,41 +34,48 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffff',
+    backgroundColor: '#fff',
   },
   header: {
     backgroundColor: '#CDEDEE',
-    paddingTop: 5,  // Mengurangi paddingTop agar lebih kecil
-    paddingBottom: 10,  // Mengurangi paddingBottom agar lebih kecil
+    paddingTop: 5,
+    paddingBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 2,
   },
   title: {
-    color: '#00000',
+    color: '#000',
     fontWeight: 'bold',
     fontSize: 15,
   },
   subtitle: {
-    color: '#00000',
+    color: '#000',
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  appDescription: {
+    textAlign: 'center',
+    fontSize: 16,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+    color: '#000',
+  },
   button: {
     alignItems: 'center',
     backgroundColor: '#CDEDEE',
     marginTop: 20,
-    borderRadius: 15, // Mengubah radius untuk membuat tombol lebih kecil
-    paddingVertical: 10, // Mengurangi padding untuk membuat tombol lebih kecil
-    width: '10%', // Mengurangi lebar tombol
+    borderRadius: 15,
+    paddingVertical: 10,
+    width: '50%', // Menyesuaikan lebar tombol agar lebih mudah diakses
   },
   buttonText: {
-    color: '#000000',
-    fontSize: 12, // Mengubah ukuran teks
-    fontWeight: 'bold', // Menambah ketebalan teks
-    marginTop: 5, // Menambah jarak antara teks dan tombol
+    color: '#000',
+    fontSize: 14, // Menyesuaikan ukuran teks agar lebih mudah dibaca
+    fontWeight: 'bold',
+    marginTop: 5,
   },
 });

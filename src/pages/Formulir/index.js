@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, View, TextInput, Button } from 'react-native';
+import { Text, StyleSheet, View, TextInput, Button, TouchableOpacity } from 'react-native';
 import { db } from '../../../firebaseConfig';
-import { set, ref, push } from 'firebase/database';
+import { push, ref } from 'firebase/database';
+import * as DocumentPicker from 'expo-document-picker';
 
 const AddData = ({ navigation }) => {
   const [programMagang, setProgramMagang] = useState('');
@@ -12,7 +13,7 @@ const AddData = ({ navigation }) => {
   const [tanggalBerakhir, setTanggalBerakhir] = useState('');
   const [suratMagang, setSuratMagang] = useState('');
   const [buktiDaftarMagang, setBuktiDaftarMagang] = useState('');
-  const [status, setStatus] = useState('Menunggu Persetujuan'); // Menambahkan status default 'Menunggu Persetujuan'
+  const [status, setStatus] = useState('Menunggu Persetujuan');
 
   const dataAddOn = async () => {
     const formData = {
@@ -24,16 +25,14 @@ const AddData = ({ navigation }) => {
       tanggalBerakhir,
       suratMagang,
       buktiDaftarMagang,
-      status, // Menambahkan status ke formData
+      status,
     };
 
-    // Kirim data ke Firebase Realtime Database
     const newFormDataRef = push(ref(db, 'magang'), formData);
     const formDataKey = newFormDataRef.key;
 
     console.log('Data Magang berhasil dikirim dengan ID:', formDataKey);
 
-    // Reset nilai input setelah pengiriman data
     resetForm();
   };
 
@@ -46,12 +45,47 @@ const AddData = ({ navigation }) => {
     setTanggalBerakhir('');
     setSuratMagang('');
     setBuktiDaftarMagang('');
-    setStatus('Pending'); // Mengganti status kembali ke 'Pending'
+    setStatus('Pending');
+  };
+
+  const [selectedFileName, setSelectedFileName] = useState('');
+
+  const pickDocument = async (fieldName) => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync();
+
+      if (result.type === 'success' && result.uri) {
+        if (fieldName === 'suratMagang') {
+          setSuratMagang(result.uri);
+          setSelectedFileName(result.name);
+        } else if (fieldName === 'buktiDaftarMagang') {
+          setBuktiDaftarMagang(result.uri);
+          setSelectedFileName(result.name);
+        }
+
+        console.log(`File ${fieldName} berhasil dipilih: ${result.name}`);
+        console.log('selectedFileName:', selectedFileName);
+      }
+    } catch (err) {
+      if (err.message !== 'DocumentPicker.getDocumentAsync cancelled') {
+        throw err;
+      }
+    }
+  };
+
+  const navigateToHome = () => {
+    navigation.navigate('Home');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Formulir Magang</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>FORMULIR | MAGANG YUK</Text>
+        <Text style={styles.subtitle}>Formulir Pendaftraan Magang</Text>
+        <TouchableOpacity style={styles.button} onPress={navigateToHome}>
+          <Text style={styles.buttonText}>DAFTAR MAGANG</Text>
+        </TouchableOpacity>
+      </View>
       <View style={styles.formContainer}>
         <TextInput
           placeholder='Program Magang'
@@ -92,28 +126,44 @@ const AddData = ({ navigation }) => {
         <TextInput
           placeholder='Surat Magang'
           value={suratMagang}
-          onChangeText={(text) => setSuratMagang(text)}
+          editable={false}
           style={styles.input}
         />
+        {suratMagang ? <Text>{suratMagang}</Text> : null}
+        <View style={styles.filePickerContainer}>
+          <View style={styles.filePickerBorder}>
+            <TouchableOpacity onPress={() => pickDocument('suratMagang')}>
+              <Text>Unggah Surat Magang</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <TextInput
           placeholder='Bukti Daftar Magang'
           value={buktiDaftarMagang}
-          onChangeText={(text) => setBuktiDaftarMagang(text)}
+          editable={false}
           style={styles.input}
         />
-        
+        {buktiDaftarMagang ? <Text>{buktiDaftarMagang}</Text> : null}
+        <View style={styles.filePickerContainer}>
+          <View style={styles.filePickerBorder}>
+            <TouchableOpacity onPress={() => pickDocument('buktiDaftarMagang')}>
+              <Text>Unggah Bukti Daftar Magang</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
       <View style={styles.buttonContainer}>
         <Button
           title='Tambahkan Data'
           onPress={dataAddOn}
-          color='#5cb85c' // Warna hijau
+          color='#5cb85c'
         />
         <Button
           title='Lihat Status'
           onPress={() => navigation.navigate('CrudTable')}
-          color='#337ab7' // Warna biru
+          color='#337ab7'
         />
       </View>
     </View>
@@ -124,17 +174,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
     justifyContent: 'center',
   },
   header: {
-    fontSize: 30,
-    textAlign: 'center',
-    marginBottom: 20,
+    backgroundColor: '#CDEDEE',
+    paddingTop: 10,
+    paddingBottom: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+  },
+  title: {
+    color: '#black',
     fontWeight: 'bold',
+    fontSize: 15,
+  },
+  subtitle: {
+    color: '#black',
+  },
+  buttonText: {
+    color: 'black',
+    fontSize: 12,
+    alignItems: 'flex-end',
   },
   formContainer: {
-    width: '100%',
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   input: {
@@ -144,11 +209,21 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 12,
     borderRadius: 5,
-    width: '80%', // Lebar input 80% dari parent
+    width: '80%',
+  },
+  filePickerContainer: {
+    marginVertical: 10,
+    alignItems: 'center',
+  },
+  filePickerBorder: {
+    borderWidth: 1,
+    borderColor: 'black',
+    borderRadius: 5,
+    padding: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'flex-end', // Mengubah dari 'space-between' ke 'flex-end'
+    justifyContent: 'flex-end',
     marginTop: 20,
   },
 });

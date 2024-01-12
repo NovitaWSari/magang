@@ -1,0 +1,1 @@
+export const sebelas = require('./sebelas.png');
