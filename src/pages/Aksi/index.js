@@ -1,35 +1,38 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, TouchableOpacity, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const Home = () => {
+const Aksi = () => {
   const navigation = useNavigation();
 
-  const navigateToFormMagang = () => {
-    navigation.navigate('FormMagang');
+  const navigateToformLogbook = () => {
+    navigation.navigate('formLogbook');
+  };
+
+  const navigateToformLaporan = () => {
+    navigation.navigate('formLaporan');
   };
 
   return (
     <View style={styles.container}>
       <StatusBar style='dark' />
       <View style={styles.header}>
-        <Text style={styles.title}>HOME | MAGANG YUK</Text>
-        <Text style={styles.subtitle}>MANDIRI atau MBKM Gass semua</Text>
+        <Text style={styles.title}>AKSI | MAGANG YUK</Text>
+        <Text style={styles.subtitle}>Tambahkan aksi untuk kegiatan magangmu</Text>
       </View>
       <View style={styles.content}>
-        <Text style={styles.appDescription}>
-          Aplikasi untuk mencatat informasi magang. Yuk daftar magang sekarang!
-        </Text>
-        <TouchableOpacity style={styles.button} onPress={navigateToFormMagang}>
-          <Text style={styles.buttonText}>DAFTAR MAGANG</Text>
+        <TouchableOpacity style={styles.button} onPress={navigateToformLogbook}>
+          <Text style={styles.buttonText}>Log Book</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={navigateToformLaporan}>
+          <Text style={styles.buttonText}>Laporan</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
 
-export default Home;
+export default Aksi;
 
 const styles = StyleSheet.create({
   container: {
@@ -57,20 +60,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  appDescription: {
-    textAlign: 'center',
-    fontSize: 16,
-    paddingHorizontal: 20,
-    marginBottom: 20,
-    color: '#000',
-  },
   button: {
     alignItems: 'center',
     backgroundColor: '#CDEDEE',
     marginTop: 20,
     borderRadius: 15,
     paddingVertical: 10,
-    width: '30%', // Menyesuaikan lebar tombol agar lebih mudah diakses
+    width: '50%', // Menyesuaikan lebar tombol agar lebih mudah diakses
   },
   buttonText: {
     color: '#000',

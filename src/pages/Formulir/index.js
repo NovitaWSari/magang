@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Text, StyleSheet, View, TextInput, Button, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { db } from '../../../firebaseConfig';
 import { push, ref } from 'firebase/database';
 import * as DocumentPicker from 'expo-document-picker';
@@ -14,6 +15,7 @@ const AddData = ({ navigation }) => {
   const [suratMagang, setSuratMagang] = useState('');
   const [buktiDaftarMagang, setBuktiDaftarMagang] = useState('');
   const [status, setStatus] = useState('Menunggu Persetujuan');
+  const [selectedFileName, setSelectedFileName] = useState('');
 
   const dataAddOn = async () => {
     const formData = {
@@ -48,8 +50,6 @@ const AddData = ({ navigation }) => {
     setStatus('Pending');
   };
 
-  const [selectedFileName, setSelectedFileName] = useState('');
-
   const pickDocument = async (fieldName) => {
     try {
       const result = await DocumentPicker.getDocumentAsync();
@@ -80,12 +80,14 @@ const AddData = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        <TouchableOpacity onPress={navigateToHome} style={styles.iconButton}>
+          <Ionicons name="md-arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+      <View style={styles.titleContainer}>
         <Text style={styles.title}>FORMULIR | MAGANG YUK</Text>
         <Text style={styles.subtitle}>Formulir Pendaftraan Magang</Text>
-        <TouchableOpacity style={styles.button} onPress={navigateToHome}>
-          <Text style={styles.buttonText}>DAFTAR MAGANG</Text>
-        </TouchableOpacity>
       </View>
+    </View>
       <View style={styles.formContainer}>
         <TextInput
           placeholder='Program Magang'
@@ -178,27 +180,33 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#CDEDEE',
-    paddingTop: 10,
-    paddingBottom: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 10,
+    flexDirection: 'row',
     elevation: 2,
   },
+  iconButton: {
+    width: '50',
+    alignItems: 'flex-start',
+    paddingTop: 8,
+    paddingLeft: 10,
+  },
+  titleContainer: {
+    marginLeft: 10,
+  },
+  buttonText: {
+    fontSize: 20,
+  },
   title: {
-    color: '#black',
+    color: 'black',
     fontWeight: 'bold',
     fontSize: 15,
   },
   subtitle: {
-    color: '#black',
-  },
-  buttonText: {
     color: 'black',
-    fontSize: 12,
-    alignItems: 'flex-end',
   },
   formContainer: {
-    flex: 1,
+    flex: 1, // Ubah agar hanya ada satu properti flex
     justifyContent: 'center',
     alignItems: 'center',
   },

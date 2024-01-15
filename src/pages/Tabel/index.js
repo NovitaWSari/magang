@@ -1,9 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, FlatList, StyleSheet, Button, Alert } from 'react-native';
+import { Text, View, FlatList, StyleSheet, Button, Alert, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { db } from '../../../firebaseConfig';
 import { onValue, ref, remove } from 'firebase/database';
 
-const CrudTable = () => {
+const CrudTable = ({ navigation }) => {
+
+  const navigateToAddData = () => {
+    navigation.navigate('AddData');
+  };
+
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -38,34 +44,17 @@ const CrudTable = () => {
     }
   };
 
-  const handleAction = (id) => {
-    Alert.alert(
-      'Pilih Aksi',
-      '',
-      [
-        {
-          text: 'Log Book',
-          onPress: () => handleAddLogBook(id),
-        },
-        {
-          text: 'Laporan',
-          onPress: () => handleAddLaporan(id),
-        },
-        {
-          text: 'Batal',
-          style: 'cancel',
-        },
-      ],
-      { cancelable: true }
-    );
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>STATUS MAGANG | MAGANG YUK</Text>
-        <Text style={styles.subtitle}>Perkembangan Pengajuan Magang</Text>
+        <TouchableOpacity onPress={navigateToAddData} style={styles.iconButton}>
+          <Ionicons name="md-arrow-back" size={24} color="black" />
+        </TouchableOpacity>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>STATUS | MAGANG YUK</Text>
+        <Text style={styles.subtitle}>Lihat Perkembangan Status Magang kamu</Text>
       </View>
+    </View>   
     <View style={styles.tableContainer}>
       <Text style={[styles.judul]}>DAFTAR PENGAJUAN MAGANG</Text>
       <View style={[styles.tableRow, styles.titleRow]}>
@@ -140,9 +129,10 @@ const CrudTable = () => {
                 onPress={() => handleDelete(item.id)}
               />
               <Button
-                title="Aksi"
-                onPress={() => handleAction(item.id, 'aksi')}
-                    />
+                title='Aksi'
+                onPress={() => navigation.navigate('Aksi')}
+                color='#337ab7'
+              />
             </View>
           </View>
         )}
@@ -160,11 +150,19 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#CDEDEE',
-    paddingTop: 5,  // Mengurangi paddingTop agar lebih kecil
-    paddingBottom: 10,  // Mengurangi paddingBottom agar lebih kecil
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingTop: 5,
+    paddingBottom: 10,
+    flexDirection: 'row',
     elevation: 2,
+  },
+  iconButton: {
+    width: '50',
+    alignItems: 'flex-start',
+    paddingTop: 8,
+    paddingLeft: 10,
+  },
+  titleContainer: {
+    marginLeft: 10,
   },
   title: {
     color: '#000',
@@ -179,9 +177,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     alignContent: 'flex-end',
     paddingBottom: 10
-  },
-  tableContainer: {
-    padding: 10, // Sesuaikan jumlah padding sesuai kebutuhan
   },
   tableRow: {
     flexDirection: 'row',
