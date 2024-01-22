@@ -1,16 +1,43 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import { useNavigation } from '@react-navigation/native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { db, ref, push } from '../../../firebaseConfig';
 
 const FormLaporan = () => {
-  const [name, setName] = useState('');
+  const [nama, setNama] = useState('');
   const [nim, setNIM] = useState('');
   const [prodi, setProdi] = useState('');
-  const [document, setDocument] = useState(null);
+  const [dokumen, setDokumen] = useState(null);
 
   const navigation = useNavigation();
+
+  const navigateToAksi = () => {
+    navigation.goBack();
+  };
+
+  const submitLaporan = async () => {
+    try {
+      const laporanRef = push(ref(db, 'laporan'), {
+        nama: nama,
+        nim: nim,
+        prodi: prodi,
+        dokumen: dokumen,
+      });
+
+      const title = laporanRef.key;
+
+      setNama('');
+      setNIM('');
+      setProdi('');
+      setDokumen('');
+
+      console.log('Data Laporan berhasil ditambahkan dengan ID:', title);
+    } catch (error) {
+      console.error('Error menambahkan data laporan:', error.message);
+    }
+  };
 
   const pickDocument = async () => {
     try {
@@ -19,66 +46,138 @@ const FormLaporan = () => {
       });
 
       if (result.type === 'success') {
-        setDocument(result);
+        setDokumen(result);
       } else {
-        // Handle the case where the user cancels the document picker
+        // Menangani kasus ketika pengguna membatalkan pemilih dokumen
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const submitReport = async () => {
-    // Implementasi pengiriman laporan ke server
-    console.log('Data Laporan:', { name, nim, prodi, document });
-  };
-
   return (
     <View style={styles.container}>
-      <TextInput
-        label="Nama"
-        value={name}
-        onChangeText={setName}
-        style={styles.input}
-      />
+      <View style={styles.header}>
+        <TouchableOpacity onPress={navigateToAksi} style={styles.iconButton}>
+          <Ionicons name="md-arrow-back" size={24} color="white" />
+        </TouchableOpacity>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>LAPORAN | MAGANG YUK</Text>
+          <Text style={styles.subtitle}>Kirim Laporan Magangmu</Text>
+        </View>
+      </View>
+      <View style={styles.content}>
+        <Text style={styles.label}>Nama:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Masukkan nama"
+          value={nama}
+          onChangeText={(text) => setNama(text)}
+        />
 
-      <TextInput
-        label="NIM"
-        value={nim}
-        onChangeText={setNIM}
-        style={styles.input}
-      />
+        <Text style={styles.label}>NIM:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Masukkan NIM"
+          value={nim}
+          onChangeText={(text) => setNIM(text)}
+        />
 
-      <TextInput
-        label="Program Studi"
-        value={prodi}
-        onChangeText={setProdi}
-        style={styles.input}
-      />
+        <Text style={styles.label}>Program Studi:</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Masukkan program studi"
+          value={prodi}
+          onChangeText={(text) => setProdi(text)}
+        />
 
-      <Button icon="file" mode="contained" onPress={pickDocument} style={styles.button}>
-        Pilih Dokumen
-      </Button>
+        <TouchableOpacity style={styles.unggah} onPress={pickDocument}>
+          <Text style={styles.unggahText}>Pilih Dokumen</Text>
+        </TouchableOpacity>
 
-      <Button icon="send" mode="contained" onPress={submitReport} style={styles.button}>
-        Kirim Laporan
-      </Button>
+        <TouchableOpacity style={styles.button} onPress={submitLaporan}>
+          <Text style={styles.buttonText}>Kirim Laporan</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
-
-export default FormLaporan;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 16,
+  },
+  header: {
+    backgroundColor: '#7D0A0A',
+    paddingTop: 5,
+    paddingBottom: 10,
+    flexDirection: 'row',
+    elevation: 2,
+  },
+  titleContainer: {
+    marginLeft: 10,
+  },
+  iconButton: {
+    width: 50,
+    alignItems: 'flex-start',
+    paddingTop: 8,
+    paddingLeft: 10,
+  },
+  title: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  subtitle: {
+    color: '#fff',
+  },
+  content: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 8,
+    elevation: 2,
+    width: '100%',
+  },
+  label: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginTop: 10,
   },
   input: {
-    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 4,
+    height: 40,
+    paddingHorizontal: 8,
+    marginBottom: 15,
+  },
+  unggah: {
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 4,
+    height: 40,
+    paddingHorizontal: 8,
+    marginBottom: 15,
+  },
+  unggahText: {
+    fontSize: 12,
+    color: 'blue',
+    marginTop: 10,
+    textAlign: 'center',
   },
   button: {
-    marginTop: 16,
+    backgroundColor: '#7D0A0A',
+    padding: 12,
+    borderRadius: 4,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: 'bold',
   },
 });
+
+export default FormLaporan;

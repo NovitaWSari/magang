@@ -1,101 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
-import { StatusBar } from 'expo-status-bar'; // Import StatusBar dari expo-status-bar
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { db, ref, push } from '../../../firebaseConfig';
+import { useNavigation } from '@react-navigation/native'; // Tambahkan impor ini
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from 'expo-image-picker';
-import { useNavigation } from '@react-navigation/native';
 
-const FormLogbook = () => { // Ganti nama fungsi menjadi FormLogbook (sesuai dengan nama file)
-  const navigation = useNavigation();
-  const [logData, setLogData] = useState({
-    tanggal: '',
-    kegiatan: '',
-    deskripsi: '',
-    buktiMedia: null,
-  });
+const FormLogbook = () => {
+  const navigation = useNavigation(); // Pastikan akses ke fungsi useNavigation
 
-  useEffect(() => {
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Maaf, kita membutuhkan izin untuk mengakses media.');
-        }
-      }
-    })();
-  }, []);
+  const [tanggal, setTanggal] = useState('');
+  const [kegiatan, setKegiatan] = useState('');
+  const [deskripsi, setDeskripsi] = useState('');
+  const [image, setImage] = useState(null);
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  const navigateToAksi = () => {
+    navigation.goBack(); // Berikan implementasi atau deklarasikan fungsi ini sesuai kebutuhan Anda
+  };
 
-    if (!result.cancelled) {
-      setLogData({ ...logData, buktiMedia: result.uri });
+  const submitLogbook = async () => {
+    try {
+      const logbookRef = push(ref(db, 'logbook'), {
+        tanggal: tanggal,
+        kegiatan: kegiatan,
+        deskripsi: deskripsi,
+        unggahmedia: image, // Updated to use the selected image URI
+      });
+  
+      const title = logbookRef.key;
+  
+      setTanggal('');
+      setKegiatan('');
+      setDeskripsi('');
+      setImage(null);
+  
+      console.log('Data Logbook berhasil ditambahkan dengan ID:', title);
+    } catch (error) {
+      console.error('Error adding logbook data:', error.message);
     }
   };
 
-  const handleChangeText = (key, value) => {
-    setLogData({
-      ...logData,
-      [key]: value,
-    });
-  };
-
-  const handleSubmit = () => {
-    // Lakukan sesuatu dengan data logbook yang telah diisi, termasuk bukti media
-    console.log('Data Logbook:', logData);
-    // Tambahkan log ke database atau lakukan tindakan lain sesuai kebutuhan
+  const pickImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      if (!result.cancelled) {
+        setImage(result.uri);
+      }
+    } catch (error) {
+      console.error('Error picking an image:', error.message);
+    }
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <StatusBar style='dark' />
-      <View style={styles.header}>
-        <Text style={styles.title}>FORM LOGBOOK</Text>
-        <Text style={styles.subtitle}>Isi Logbook Anda</Text>
-      </View>
-      <View style={styles.formContainer}>
-        <Text style={styles.label}>Tanggal:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="YYYY-MM-DD"
-          value={logData.tanggal}
-          onChangeText={(text) => handleChangeText('tanggal', text)}
-          keyboardType="numeric"
-        />
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={navigateToAksi} style={styles.iconButton}>
+            <Ionicons name="md-arrow-back" size={24} color="white" />
+          </TouchableOpacity>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>AKSI | MAGANG YUK</Text>
+            <Text style={styles.subtitle}>Lakukan aksi untuk kegiatan Magangmu</Text>
+          </View>
+        </View>
+        <View style={styles.formContainer}>
+          <Text style={styles.label}>Tanggal:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="YYYY-MM-DD"
+            value={tanggal}
+            onChangeText={(text) => setTanggal(text)}
+            keyboardType="numeric"
+          />
+          <Text style={styles.label}>Deskripsi Kegiatan:</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Deskripsi kegiatan"
+            value={kegiatan}
+            onChangeText={(text) => setKegiatan(text)}
+          />
 
-        <Text style={styles.label}>Kegiatan:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Deskripsi kegiatan"
-          value={logData.kegiatan}
-          onChangeText={(text) => handleChangeText('kegiatan', text)}
-        />
+          <Text style={styles.label}>Deskripsi:</Text>
+          <TextInput
+            style={[styles.input, styles.multilineInput]}
+            placeholder="Detail kegiatan"
+            value={deskripsi}
+            onChangeText={(text) => setDeskripsi(text)}
+            multiline
+          />
+          <TouchableOpacity
+              style={styles.unggah}
+              onPress={pickImage}
+            >
+              <Text style={styles.unggahText}>Unggah Foto</Text>
+          </TouchableOpacity>
 
-        <Text style={styles.label}>Deskripsi:</Text>
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Detail kegiatan"
-          value={logData.deskripsi}
-          onChangeText={(text) => handleChangeText('deskripsi', text)}
-          multiline
-        />
-
-        <Text style={styles.label}>Unggah Media:</Text>
-        <TouchableOpacity style={styles.button} onPress={pickImage}>
-          <Text style={styles.buttonText}>Unggah Bukti</Text>
-        </TouchableOpacity>
-
-        {logData.buktiMedia && (
-          <Image source={{ uri: logData.buktiMedia }} style={{ width: 200, height: 200, marginTop: 10 }} />
-        )}
-
-        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Simpan Log</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={submitLogbook}
+          >
+            <Text style={styles.buttonText}>AddData</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
@@ -106,54 +117,77 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    backgroundColor: '#CDEDEE',
+    backgroundColor: '#7D0A0A',
     paddingTop: 5,
     paddingBottom: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'row',
     elevation: 2,
   },
+  titleContainer: {
+    marginLeft: 10,
+  },
+  iconButton: {
+    width: 50, // Change to a numeric value
+    alignItems: 'flex-start',
+    paddingTop: 8,
+    paddingLeft: 10,
+  },
   title: {
-    color: '#000',
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
   },
   subtitle: {
-    color: '#000',
+    color: '#fff',
   },
   formContainer: {
     backgroundColor: '#fff',
-    padding: 16,
+    padding: 10,
     borderRadius: 8,
     elevation: 2,
-    width: '80%',
+    width: '100%',
   },
   label: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
-    marginTop: 8,
+    marginTop: 10,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#000',
     borderRadius: 4,
     height: 40,
     paddingHorizontal: 8,
-    marginBottom: 16,
+    marginBottom: 15,
+  },
+  unggah: {
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 4,
+    height: 40,
+    paddingHorizontal: 8,
+    marginBottom: 15,
+  },
+  unggahText: {
+    fontSize: 12,
+    color: 'blue',
+    marginTop: 10,
+    textAlign: 'center',
   },
   multilineInput: {
     height: 100,
   },
   button: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#7D0A0A',
     padding: 12,
     borderRadius: 4,
     alignItems: 'center',
     marginTop: 10,
+    width: '30%',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
   },
 });

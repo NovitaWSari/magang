@@ -81,7 +81,7 @@ const AddData = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={navigateToHome} style={styles.iconButton}>
-          <Ionicons name="md-arrow-back" size={24} color="black" />
+          <Ionicons name="md-arrow-back" size={24} color="white" />
         </TouchableOpacity>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>FORMULIR | MAGANG YUK</Text>
@@ -160,7 +160,6 @@ const AddData = ({ navigation }) => {
         <Button
           title='Tambahkan Data'
           onPress={dataAddOn}
-          color='#5cb85c'
         />
         <Button
           title='Lihat Status'
@@ -179,7 +178,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   header: {
-    backgroundColor: '#CDEDEE',
+    backgroundColor: '#7D0A0A',
     paddingTop: 5,
     paddingBottom: 10,
     flexDirection: 'row',
@@ -198,12 +197,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   title: {
-    color: 'black',
+    color: 'white',
     fontWeight: 'bold',
     fontSize: 15,
   },
   subtitle: {
-    color: 'black',
+    color: 'white',
   },
   formContainer: {
     flex: 1, // Ubah agar hanya ada satu properti flex
@@ -232,7 +231,9 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    marginTop: 20,
+    marginBottom: 30,
+    marginRight: 20,
+    borderRadius: 7,
   },
 });
 

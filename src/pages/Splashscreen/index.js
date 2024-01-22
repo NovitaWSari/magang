@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, View, Image, Text } from 'react-native'; // Import Text dari 'react-native'
 
 const Splashscreen = ({ navigation }) => {
   useEffect(() => {
@@ -10,7 +10,11 @@ const Splashscreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Splash Screen</Text>
+      <Image
+        source={require('/assets/magangUYP-removebg-preview.png')} // Ganti path dengan path gambar Anda
+        style={styles.logo}
+      />
+      <Text style={styles.judul}>MAGANG YUK</Text>
     </View>
   );
 };
@@ -20,17 +24,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff', // Ganti dengan warna latar yang diinginkan
+    backgroundColor: '#7D0A0A', // Ganti dengan warna latar yang diinginkan
   },
   logo: {
-    width: 200, // Sesuaikan lebar gambar
-    height: 200, // Sesuaikan tinggi gambar
+    width: 250, // Sesuaikan lebar gambar
+    height: 250, // Sesuaikan tinggi gambar
   },
-  text: {
-    marginTop: 20,
+  judul: {
+    marginTop: 10,
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000', // Ganti dengan warna teks yang diinginkan
+    color: '#fff', // Ganti dengan warna teks yang diinginkan
   },
 });
 

@@ -48,7 +48,7 @@ const CrudTable = ({ navigation }) => {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={navigateToAddData} style={styles.iconButton}>
-          <Ionicons name="md-arrow-back" size={24} color="black" />
+          <Ionicons name="md-arrow-back" size={24} color="white" />
         </TouchableOpacity>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>STATUS | MAGANG YUK</Text>
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   header: {
-    backgroundColor: '#CDEDEE',
+    backgroundColor: '#7D0A0A',
     paddingTop: 5,
     paddingBottom: 10,
     flexDirection: 'row',
@@ -165,17 +165,18 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   title: {
-    color: '#000',
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 15,
   },
   subtitle: {
-    color: '#000',
+    color: '#fff',
   },
   judul: {
     color: '#000',
     fontSize: 12,
     alignContent: 'flex-end',
+    paddingTop: 10,
     paddingBottom: 10
   },
   tableRow: {
@@ -183,19 +184,23 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#000',
     paddingVertical: 10,
+    
   },
   tableCell: {
     flex: 1,
     alignItems: 'flex-start',
     paddingHorizontal: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   titleRow: {
-    backgroundColor: '#ddd',
+    backgroundColor: '#7D0A0A',
   },
   titleText: {
     fontWeight: 'bold',
+    color: 'white'
   },
   tableCellTitle: {
     flex: 1,
